@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Favorite color select webpage</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function selectedColor(color_name) {
+            if($("#user_name").val().length == 0){
+                alert("이름을 입력하세요");
+            }else{
+                var url = 'http://localhost:8081/api/select?color='+color_name+'&user='+ $("#user_name").val();
+                $.get(url)
+            }
+        }
+        function sendData() {
+            var userCnt = Number($("#user_name").val());
+            alert("sendData");
+            var arr = [{"name":"이경화", "no":"D5524"}, {"name":"최영재", "no":"D5555"}];
+            var arr = [];
+            for(var i=0;i<userCnt;i++){
+                arr.push({"name":"이름"+i, "no":i});
+            }
+            $.ajax({
+                url: 'http://localhost:8081/sendKafka'
+                , type: 'post'
+                , dataType: 'json' // 데이터 타입을 Json으로 변경
+                , contentType: 'application/json' // Content-Type을 Json으로 변경
+                , data: JSON.stringify(arr) // JSON String으로 전환하여 보낸다.
+                , success: function(response) {
+                }
+            });
+        }
+        function sendData2() {
+            var userCnt = Number($("#user_name").val());
+            alert("sendData");
+            var arr = [{"name":"이경화", "no":"D5524"}, {"name":"최영재", "no":"D5555"}];
+            var arr = [];
+            for(var i=0;i<userCnt;i++){
+                arr.push({"name":"이름"+i, "no":i});
+            }
+            $.ajax({
+                url: 'http://localhost:8081/sendKafka2'
+                , type: 'post'
+                , dataType: 'json' // 데이터 타입을 Json으로 변경
+                , contentType: 'application/json' // Content-Type을 Json으로 변경
+                , data: JSON.stringify(arr) // JSON String으로 전환하여 보낸다.
+                , success: function(response) {
+                }
+            });
+        }
+        function sendDatasingle() {
+            var userCnt = Number($("#user_name").val());
+            alert("sendData");
+            for(var i=0;i<userCnt;i++){
+                var arr = {"name":"이름"+i, "no":i};
+                $.ajax({
+                url: 'http://localhost:8081/sendKafkasingle'
+                , type: 'post'
+                , contentType: 'application/json' // 데이터 타입을 Json으로 변경
+                , data: JSON.stringify(arr) // JSON String으로 전환하여 보낸다.
+                , success: function(response) {
+                }
+            });
+            }
+        }
+    </script>
+</head>
+<body>
+<div style="width:100%; height:50%;">
+    <h1>인사정보 전송 건수</h1>
+    <label for="user_name"></label>
+    <input type="text" id="user_name">
+    <h1>전송</h1>
+    <button type="button" onclick="sendData()">sendData</button>
+    <button type="button" onclick="sendData2()">sendDatasingle</button>
+    <button type="button" onclick="sendDatasingle()">sendDatasingle</button>
+</div>
+</body>
+</html>

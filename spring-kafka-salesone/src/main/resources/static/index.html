@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>salesone</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        // 페이지 로딩 시 인사정보와 팀 정보 조회
+        $(document).ready(function() {
+            // 인사정보 조회
+            $.ajax({
+                url: 'http://localhost:8888/member',  // 모든 인사정보 조회 API
+                type: 'get',
+                dataType: 'json',
+                success: function(response) {
+                    if(response && response.length > 0) {
+                        // 받은 인사정보를 텍스트박스에 넣기
+                        $("#user_info").val(JSON.stringify(response, null, 2)); // 보기 좋게 들여쓰기 추가
+                    } else {
+                        alert("인사정보가 없습니다.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("인사정보를 가져오는 데 실패했습니다.");
+                }
+            });
+
+            // 팀 정보 조회
+            $.ajax({
+                url: 'http://localhost:8888/team',  // 모든 팀 정보 조회 API
+                type: 'get',
+                dataType: 'json',
+                success: function(response) {
+                    if(response && response.length > 0) {
+                        // 받은 팀 정보를 텍스트박스에 넣기
+                        $("#team_info").val(JSON.stringify(response, null, 2)); // 보기 좋게 들여쓰기 추가
+                    } else {
+                        alert("팀 정보가 없습니다.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("팀 정보를 가져오는 데 실패했습니다.");
+                }
+            });
+
+         // 팀 정보 조회
+            $.ajax({
+                url: 'http://localhost:8888/md',  // 모든 md 정보 조회 API
+                type: 'get',
+                dataType: 'json',
+                success: function(response) {
+                    if(response && response.length > 0) {
+                        // 받은 팀 정보를 텍스트박스에 넣기
+                        $("#md_info").val(JSON.stringify(response, null, 2)); // 보기 좋게 들여쓰기 추가
+                    } else {
+                        alert("팀 정보가 없습니다.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("팀 정보를 가져오는 데 실패했습니다.");
+                }
+            });
+        });
+
+        // 팀 정보를 Kafka로 전송하는 함수
+        function sendMdData() {
+            var arr = JSON.parse($("#md_info").val());  // 텍스트박스에 있는 팀 데이터를 파싱
+            if(arr && arr.length > 0) {
+                $.ajax({
+                    url: 'http://localhost:8888/md',
+                    type: 'post',
+                    dataType: 'text',
+                    contentType: 'application/json',
+                    data: JSON.stringify(arr),  // JSON String으로 전환하여 전송
+                    success: function(response) {
+                        alert(response);
+                    },
+                    error: function(xhr, status, error) {
+                        alert("팀 정보 전송 실패");
+                    }
+                });
+            } else {
+                alert("유효한 팀 정보가 없습니다.");
+            }
+        }
+    </script>
+</head>
+<body>
+<div style="width:100%; height:50%;">
+	<h1>salesone</h1>
+    <h2>member 조회</h2>
+    <textarea id="user_info" rows="10" cols="50" placeholder="생성된 인사정보가 여기에 표시됩니다."></textarea>
+    <br>
+    <!-- <button type="button" onclick="sendMemberData()">저장하고 카프카 전송</button> -->
+
+    <h2>team 조회</h2>
+    <textarea id="team_info" rows="10" cols="50" placeholder="생성된 팀 정보가 여기에 표시됩니다."></textarea>
+    <br>
+    <!-- <button type="button" onclick="sendTeamData()">저장하고 카프카 전송</button>-->
+
+	<h2>MD</h2>
+    <textarea id="md_info" rows="10" cols="50" placeholder="생성된 Md 정보가 여기에 표시됩니다."></textarea>
+    <br>
+    <button type="button" onclick="sendMdData()">저장하고 카프카 전송</button>
+</div>
+</body>
+</html>
